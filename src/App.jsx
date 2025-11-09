@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import PostForm from './components/PostForm'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -11,6 +12,8 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState(null)
+
+  const newPostRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs => {
@@ -86,8 +89,31 @@ const App = () => {
     setUser(null)
   }
 
-  const updateBlogList = (createdPost) => {
-    setBlogs(blogs.concat(createdPost))
+  const updateBlogList = async (postObj) => {
+    try {
+      const createdPost = await blogService.create(postObj)
+
+      setBlogs(blogs.concat(createdPost))
+    
+      newPostRef.current.toggleVisible()
+
+      setNotification({
+        message: `a new blog ${createdPost.title} by ${createdPost.author.name} added`,
+        status: "ok"
+      })
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    } catch {
+      setNotification({
+        message: "create post failed",
+        status: "error"
+      })
+      setTimeout(() => {
+        setNotification(null)
+      })
+    }
+    
   }
   
   return (
@@ -105,7 +131,17 @@ const App = () => {
         </div>
       )}
 
-      {user && <PostForm user={user} updateBlogListState={updateBlogList} />}
+      {user && (
+        <>
+          <Notification notification={notification} />
+          <Togglable buttonLabel={'create new blog'} ref={newPostRef}>
+            <PostForm 
+              user={user} 
+              createPost={updateBlogList}
+            />
+          </Togglable>
+        </>
+      )}
 
       {blogs.length && blogs.map(blog => 
         <Blog key={blog.id} blog={blog} />

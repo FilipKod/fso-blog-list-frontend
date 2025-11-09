@@ -14,3 +14,10 @@
 .notification.ok {
   color: green;
 }
+
+.post {
+  padding: .3rem .5rem;
+  border: 1px solid black;
+  border-radius: 5px;
+  margin: .5rem 0;
+}

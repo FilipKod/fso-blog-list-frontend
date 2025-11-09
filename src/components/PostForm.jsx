@@ -1,51 +1,27 @@
 import { useState } from "react"
-import blogService from "../services/blogs"
-import Notification from "./Notification"
 
-const PostForm = ({ user, updateBlogListState }) => {
+const PostForm = ({ 
+  user, 
+  createPost ,
+}) => {
   const [postTitle, setPostTitle] = useState('')
   const [postUrl, setPostUrl] = useState('')
-  const [notification, setNotification] = useState(null)
 
   const handleCreateForm = async (event) => {
     event.preventDefault()
 
-    try {
-      const postData = {
-        title: postTitle,
-        url: postUrl
-      }
-  
-      const createdPost = await blogService.create(postData)
-  
-      updateBlogListState(createdPost)
-  
-      setPostTitle('')
-      setPostUrl('')
-
-      setNotification({
-        message: `a new blog ${createdPost.title} by ${createdPost.author.name} added`,
-        status: "ok"
-      })
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
-    } catch {
-      setNotification({
-        message: "create post failed",
-        status: "error"
-      })
-      setTimeout(() => {
-        setNotification(null)
-      })
-    }
+    createPost({
+      title: postTitle,
+      url: postUrl
+    })
+    
+    setPostTitle('')
+    setPostUrl('')
   }
 
   return (
     <div>
       <h2>create new</h2>
-
-      <Notification notification={notification} />
 
       <form onSubmit={handleCreateForm}>
         <div>
