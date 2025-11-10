@@ -7,6 +7,10 @@
   margin-bottom: 10px;
 }
 
+button {
+  cursor: pointer;
+}
+
 .notification.error {
   color: red;
 }
@@ -20,4 +24,12 @@
   border: 1px solid black;
   border-radius: 5px;
   margin: .5rem 0;
+}
+
+.removeBtn {
+  background-color: indianred;
+  border-radius: 3px;
+  margin-top: .5rem;
+  font-weight: bold;
+  padding: .2rem .5rem;
 }

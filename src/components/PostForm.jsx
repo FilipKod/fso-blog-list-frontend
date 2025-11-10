@@ -1,7 +1,7 @@
-import { useState } from "react"
+import { useState } from 'react'
 
-const PostForm = ({ 
-  user, 
+const PostForm = ({
+  user,
   createPost ,
 }) => {
   const [postTitle, setPostTitle] = useState('')
@@ -14,7 +14,7 @@ const PostForm = ({
       title: postTitle,
       url: postUrl
     })
-    
+
     setPostTitle('')
     setPostUrl('')
   }
@@ -26,33 +26,33 @@ const PostForm = ({
       <form onSubmit={handleCreateForm}>
         <div>
           <label htmlFor="postTitle">title:</label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             id="postTitle"
             value={postTitle}
-            onChange={({target}) => setPostTitle(target.value)}
-            />
+            onChange={({ target }) => setPostTitle(target.value)}
+          />
         </div>
 
         <div>
           <label htmlFor="postAuthor">author:</label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             id="postAuthor"
             value={user.name}
             disabled
-            />
+          />
         </div>
 
         <div>
           <label htmlFor="postUrl">url:</label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             id="postUrl"
             value={postUrl}
-            onChange={({target}) => setPostUrl(target.value)}
-            />
-        </div> 
+            onChange={({ target }) => setPostUrl(target.value)}
+          />
+        </div>
         <button type="submit">create</button>
       </form>
     </div>

@@ -26,4 +26,9 @@ const update = async (postData) => {
   return response.data
 }
 
-export default { getAll, create, setToken, update }
+const remove = async (postId) => {
+  const response = await axios.delete(`${baseUrl}/${postId}`)
+  return response.data
+}
+
+export default { getAll, create, setToken, update, remove }

@@ -19,7 +19,7 @@ const App = () => {
     blogService.getAll().then(blogs => {
       setBlogs( blogs )
     }
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -30,13 +30,13 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
-  
+
   const handleLoginSubmit = async (event) => {
-    event.preventDefault();
-    
+    event.preventDefault()
+
     try {
-      const user = await loginService.login({username, password})
-      
+      const user = await loginService.login({ username, password })
+
       window.localStorage.setItem('loggedAppUser', JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
@@ -45,14 +45,14 @@ const App = () => {
     } catch (error) {
       setNotification({
         message: error.response.data.error,
-        status: "error"
+        status: 'error'
       })
       setTimeout(() => {
         setNotification(null)
       }, 5000)
     }
   }
-  
+
   const loginForm = () => (
     <>
       <h2>log in to application</h2>
@@ -62,28 +62,28 @@ const App = () => {
       <form onSubmit={handleLoginSubmit}>
         <div>
           <label htmlFor="username">username</label>
-          <input 
-            id='username' 
-            type='text' 
+          <input
+            id='username'
+            type='text'
             value={username}
-            onChange={({target}) => setUsername(target.value)}
-            />
+            onChange={({ target }) => setUsername(target.value)}
+          />
         </div>
 
         <div>
           <label htmlFor="password">password</label>
-          <input 
-            id='password' 
-            type='password' 
+          <input
+            id='password'
+            type='password'
             value={password}
-            onChange={({target}) => setPassword(target.value)}
-            />
+            onChange={({ target }) => setPassword(target.value)}
+          />
         </div>
         <button type='submit'>login</button>
       </form>
     </>
   )
-  
+
   const handleLogout = () => {
     window.localStorage.removeItem('loggedAppUser')
     setUser(null)
@@ -94,26 +94,26 @@ const App = () => {
       const createdPost = await blogService.create(postObj)
 
       setBlogs(blogs.concat(createdPost))
-    
+
       newPostRef.current.toggleVisible()
 
       setNotification({
         message: `a new blog ${createdPost.title} by ${createdPost.author.name} added`,
-        status: "ok"
+        status: 'ok'
       })
       setTimeout(() => {
         setNotification(null)
       }, 5000)
     } catch {
       setNotification({
-        message: "create post failed",
-        status: "error"
+        message: 'create post failed',
+        status: 'error'
       })
       setTimeout(() => {
         setNotification(null)
       })
     }
-    
+
   }
 
   const handleLikeButton = async (blog) => {
@@ -125,7 +125,26 @@ const App = () => {
 
     setBlogs(blogs.map(post => post.id === updatedPost.id ? updatedPost : post))
   }
-  
+
+  const handleRemoveButton = async (blog) => {
+
+    const confirmed = confirm(`Remove blog ${blog.title} by ${blog.author.name}`)
+
+    if (confirmed) {
+      await blogService.remove(blog.id)
+
+      setBlogs(blogs.filter(p => p.id !== blog.id))
+
+      setNotification({
+        message: `post ${blog.title} removed`,
+        status: 'ok'
+      })
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    }
+  }
+
   return (
     <div>
       {!user && loginForm()}
@@ -145,16 +164,21 @@ const App = () => {
         <>
           <Notification notification={notification} />
           <Togglable buttonLabel={'create new blog'} ref={newPostRef}>
-            <PostForm 
-              user={user} 
+            <PostForm
+              user={user}
               createPost={updateBlogList}
             />
           </Togglable>
         </>
       )}
 
-      {blogs.length && blogs.map(blog => 
-        <Blog key={blog.id} blog={blog} onLike={handleLikeButton} />
+      {blogs.length && blogs.sort((a, b) => b.likes - a.likes).map(blog =>
+        <Blog
+          key={blog.id}
+          blog={blog}
+          onLike={handleLikeButton}
+          onRemove={handleRemoveButton}
+        />
       )}
     </div>
   )
