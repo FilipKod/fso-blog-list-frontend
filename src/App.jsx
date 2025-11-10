@@ -115,6 +115,16 @@ const App = () => {
     }
     
   }
+
+  const handleLikeButton = async (blog) => {
+    const postObj = {
+      ...blog,
+      likes: blog.likes + 1
+    }
+    const updatedPost = await blogService.update(postObj)
+
+    setBlogs(blogs.map(post => post.id === updatedPost.id ? updatedPost : post))
+  }
   
   return (
     <div>
@@ -144,7 +154,7 @@ const App = () => {
       )}
 
       {blogs.length && blogs.map(blog => 
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} onLike={handleLikeButton} />
       )}
     </div>
   )
