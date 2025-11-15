@@ -12,7 +12,7 @@ const Blog = ({ blog, onLike, onRemove }) => {
         {visible ? 'hide' : 'view'}
       </button>
       {visible && (
-        <>
+        <div id="post-details">
           <div>{blog.url}</div>
           <div>
             <span>likes {blog.likes}</span>
@@ -22,7 +22,7 @@ const Blog = ({ blog, onLike, onRemove }) => {
           <div>
             <button className="removeBtn" onClick={() => onRemove(blog)}>remove</button>
           </div>
-        </>
+        </div>
       )}
     </div>
   )
