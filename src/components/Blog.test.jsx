@@ -73,4 +73,29 @@ describe('<Blog />', () => {
 
     expect(onClickLike.mock.calls).toHaveLength(2)
   })
+
+  test('remove button is clicked', async () => {
+    const blog = {
+      title: 'Test title',
+      author: {
+        name: 'test author',
+        username: 'test username',
+      },
+      url: 'test url',
+      likes: 21
+    }
+
+    const onRemoveClick = vi.fn()
+
+    render(<Blog blog={blog} onRemove={onRemoveClick} />)
+
+    const user = userEvent.setup()
+    const viewBtn = screen.getByRole('button', { name: 'view' })
+    await user.click(viewBtn)
+
+    const removeBtn = screen.getByRole('button', { name: 'remove' })
+    await user.click(removeBtn)
+
+    expect(onRemoveClick).toBeCalledTimes(1)
+  })
 })
