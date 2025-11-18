@@ -42,6 +42,13 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      setNotification({
+        message: 'user successfuly logged in',
+        status: 'ok'
+      })
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
     } catch (error) {
       setNotification({
         message: error.response.data.error,
@@ -151,8 +158,10 @@ const App = () => {
 
       <h2>blogs</h2>
 
+
       {user && (
         <div>
+          <Notification notification={notification} />
           <p>
             {user.name} logged in
             <button onClick={handleLogout}>logout</button>
@@ -162,7 +171,6 @@ const App = () => {
 
       {user && (
         <>
-          <Notification notification={notification} />
           <Togglable buttonLabel={'create new blog'} ref={newPostRef}>
             <PostForm
               user={user}
