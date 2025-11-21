@@ -27,7 +27,11 @@ const update = async (postData) => {
 }
 
 const remove = async (postId) => {
-  const response = await axios.delete(`${baseUrl}/${postId}`)
+  const config = {
+    headers: { Authorization: token }
+  }
+
+  const response = await axios.delete(`${baseUrl}/${postId}`, config)
   return response.data
 }
 

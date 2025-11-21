@@ -94,6 +94,7 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.removeItem('loggedAppUser')
     setUser(null)
+    blogService.setToken(null)
   }
 
   const updateBlogList = async (postObj) => {
@@ -184,6 +185,7 @@ const App = () => {
         <Blog
           key={blog.id}
           blog={blog}
+          user={user}
           onLike={handleLikeButton}
           onRemove={handleRemoveButton}
         />
