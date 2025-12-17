@@ -1,42 +1,66 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
+import js from "@eslint/js";
+import globals from "globals";
+import pluginReact from "eslint-plugin-react";
+import { fileURLToPath } from "url";
+import path from "path";
+import { FlatCompat } from "@eslint/eslintrc";
+import eslintConfigPrettier from "eslint-config-prettier/flat";
+import eslintPluginPrettier from "eslint-plugin-prettier/recommended";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+});
 
 export default [
-  { ignores: ['dist'] },
   {
-    files: ['**/*.{js,jsx}'],
+    ignores: ["eslint.config.js", "*.config.js"],
+  },
+  js.configs.recommended,
+  {
+    files: ["**/*.{js,mjs,cjs,jsx}"],
     languageOptions: {
-      ecmaVersion: 2020,
+      ecmaVersion: "latest",
+      sourceType: "module",
       globals: globals.browser,
       parserOptions: {
-        ecmaVersion: 'latest',
-        ecmaFeatures: { jsx: true },
-        sourceType: 'module'
-      }
+        ecmaVersion: "latest",
+      },
     },
-    plugins: {
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh
-    },
+  },
+  ...compat.extends("airbnb", "airbnb/hooks"),
+  {
     rules: {
-      ...js.configs.recommended.rules,
-      ...reactHooks.configs.recommended.rules,
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true }
+      "no-unused-vars": [
+        "error",
+        {
+          caughtErrors: "none",
+        },
       ],
-      indent: ['error', 2],
-      'linebreak-style': ['error', 'unix'],
-      quotes: ['error', 'single'],
-      semi: ['error', 'never'],
-      eqeqeq: 'error',
-      'no-trailing-spaces': 'error',
-      'object-curly-spacing': ['error', 'always'],
-      'arrow-spacing': ['error', { before: true, after: true }],
-      'no-console': 'off'
-    }
-  }
-]
+      "import/no-extraneous-dependencies": [
+        "error",
+        {
+          devDependencies: [
+            "**/*.test.{js,jsx}",
+            "**/*.spec.{js,jsx}",
+            "**/__tests__/**",
+            "**/*.config.js",
+            "**/setupTests.js",
+            "**/testSetup.js",
+          ],
+        },
+      ],
+      "prettier/prettier": [
+        "error",
+        {
+          trailingComma: "es5",
+        },
+      ],
+    },
+  },
+  pluginReact.configs.flat.recommended,
+  eslintConfigPrettier,
+  eslintPluginPrettier,
+];
