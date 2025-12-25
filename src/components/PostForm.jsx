@@ -1,17 +1,23 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
+import { createNewPost } from "../reducers/blogReducer";
 
-function PostForm({ user, createPost }) {
+function PostForm({ user }) {
+  const dispatch = useDispatch();
+
   const [postTitle, setPostTitle] = useState("");
   const [postUrl, setPostUrl] = useState("");
 
   const handleCreateForm = async (event) => {
     event.preventDefault();
 
-    createPost({
+    const postData = {
       title: postTitle,
       url: postUrl,
-    });
+    };
+
+    dispatch(createNewPost(postData));
 
     setPostTitle("");
     setPostUrl("");
@@ -63,5 +69,4 @@ PostForm.propTypes = {
   user: PropTypes.shape({
     name: PropTypes.string.isRequired,
   }).isRequired,
-  createPost: PropTypes.func.isRequired,
 };

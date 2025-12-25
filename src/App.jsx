@@ -7,12 +7,13 @@ import Togglable from "./components/Togglable";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import { setNotification } from "./reducers/notificationReducer";
+import { fetchInitialPosts } from "./reducers/blogReducer";
 
 export default function App() {
   const dispatch = useDispatch();
-  const notification = useSelector((state) => state.notifications);
+  const notification = useSelector((state) => state.notification);
+  const blogs = useSelector((state) => state.blogs);
 
-  const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
@@ -20,10 +21,8 @@ export default function App() {
   const newPostRef = useRef();
 
   useEffect(() => {
-    blogService.getAll().then((blogsList) => {
-      setBlogs(blogsList);
-    });
-  }, []);
+    dispatch(fetchInitialPosts());
+  }, [dispatch]);
 
   useEffect(() => {
     const userStorage = window.localStorage.getItem("loggedAppUser");
@@ -50,7 +49,9 @@ export default function App() {
       setPassword("");
       dispatch(setNotification("user successfuly logged in", "ok", 5));
     } catch (error) {
-      dispatch(setNotification(error.response.data.error, "error", 5));
+      if (error.response) {
+        dispatch(setNotification(error.response.data.error, "error", 5));
+      }
     }
   };
 
@@ -95,37 +96,17 @@ export default function App() {
     blogService.setToken(null);
   };
 
-  const updateBlogList = async (postObj) => {
-    try {
-      const createdPost = await blogService.create(postObj);
+  // const handleLikeButton = async (blog) => {
+  // const postObj = {
+  //   ...blog,
+  //   likes: blog.likes + 1,
+  // };
+  // const updatedPost = await blogService.update(postObj);
 
-      setBlogs(blogs.concat(createdPost));
-
-      newPostRef.current.toggleVisible();
-
-      dispatch(
-        setNotification(
-          `a new blog ${createdPost.title} by ${createdPost.author.name} added`,
-          "ok",
-          5
-        )
-      );
-    } catch (_error) {
-      dispatch(setNotification("create post failed", "error", 5));
-    }
-  };
-
-  const handleLikeButton = async (blog) => {
-    const postObj = {
-      ...blog,
-      likes: blog.likes + 1,
-    };
-    const updatedPost = await blogService.update(postObj);
-
-    setBlogs(
-      blogs.map((post) => (post.id === updatedPost.id ? updatedPost : post))
-    );
-  };
+  // setBlogs(
+  //   blogs.map((post) => (post.id === updatedPost.id ? updatedPost : post))
+  // );
+  // };
 
   const handleRemoveButton = async (blog) => {
     // eslint-disable-next-line no-alert
@@ -136,7 +117,7 @@ export default function App() {
     if (confirmed) {
       await blogService.remove(blog.id);
 
-      setBlogs(blogs.filter((p) => p.id !== blog.id));
+      // setBlogs(blogs.filter((p) => p.id !== blog.id));
 
       dispatch(setNotification(`post ${blog.title} removed`, "ok", 5));
     }
@@ -162,22 +143,22 @@ export default function App() {
 
       {user && (
         <Togglable buttonLabel="create new blog" ref={newPostRef}>
-          <PostForm user={user} createPost={updateBlogList} />
+          <PostForm user={user} />
         </Togglable>
       )}
 
       {blogs &&
         blogs
-          .sort((a, b) => b.likes - a.likes)
           .map((blog) => (
             <Blog
               key={blog.id}
               blog={blog}
               user={user}
-              onLike={handleLikeButton}
+              // onLike={handleLikeButton}
               onRemove={handleRemoveButton}
             />
-          ))}
+          ))
+          .sort((a, b) => b.likes - a.likes)}
     </div>
   );
 }
