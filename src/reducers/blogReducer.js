@@ -9,13 +9,18 @@ const blogSlice = createSlice({
     setPosts: (state, action) => {
       return action.payload;
     },
-    createPost: (state, action) => {
+    addPost: (state, action) => {
       state.push(action.payload);
+    },
+    updatePost: (state, action) => {
+      return state.map((post) =>
+        post.id === action.payload.id ? action.payload : post
+      );
     },
   },
 });
 
-const { setPosts, createPost } = blogSlice.actions;
+const { setPosts, addPost, updatePost } = blogSlice.actions;
 
 export const fetchInitialPosts = () => {
   return async (dispatch) => {
@@ -28,7 +33,7 @@ export const createNewPost = (postData) => {
   return async (dispatch) => {
     try {
       const createdPost = await blogService.create(postData);
-      dispatch(createPost(createdPost));
+      dispatch(addPost(createdPost));
       dispatch(
         setNotification(
           `a new blog ${createdPost.title} by ${createdPost.author.name} added`,
@@ -38,6 +43,25 @@ export const createNewPost = (postData) => {
       );
     } catch (_error) {
       dispatch(setNotification("create post failed", "error", 5));
+    }
+  };
+};
+
+export const likePost = (blog) => {
+  return async (dispatch) => {
+    const optimisticPost = {
+      ...blog,
+      likes: blog.likes + 1,
+    };
+
+    dispatch(updatePost(optimisticPost));
+
+    try {
+      const updatedPost = await blogService.update(optimisticPost);
+
+      dispatch(updatePost(updatedPost));
+    } catch (error) {
+      dispatch(setNotification("Like error"), "error", 5);
     }
   };
 };
