@@ -8,15 +8,16 @@ import blogService from "./services/blogs";
 import loginService from "./services/login";
 import { setNotification } from "./reducers/notificationReducer";
 import { fetchInitialPosts } from "./reducers/blogReducer";
+import { authUser } from "./reducers/authReducer";
 
 export default function App() {
   const dispatch = useDispatch();
   const notification = useSelector((state) => state.notification);
   const blogs = useSelector((state) => state.blogs);
+  const user = useSelector((state) => state.auth);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
 
   const newPostRef = useRef();
 
@@ -28,7 +29,7 @@ export default function App() {
     const userStorage = window.localStorage.getItem("loggedAppUser");
     if (userStorage) {
       const userObj = JSON.parse(userStorage);
-      setUser(userObj);
+      dispatch(authUser(userObj));
       blogService.setToken(userObj.token);
     }
   }, []);
@@ -44,7 +45,7 @@ export default function App() {
         JSON.stringify(userFromLogin)
       );
       blogService.setToken(userFromLogin.token);
-      setUser(userFromLogin);
+      dispatch(authUser(userFromLogin));
       setUsername("");
       setPassword("");
       dispatch(setNotification("user successfuly logged in", "ok", 5));
@@ -92,7 +93,7 @@ export default function App() {
 
   const handleLogout = () => {
     window.localStorage.removeItem("loggedAppUser");
-    setUser(null);
+    dispatch(authUser(null));
     blogService.setToken(null);
   };
 
