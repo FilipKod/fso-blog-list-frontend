@@ -1,17 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Blog from "./components/Blog";
 import PostForm from "./components/PostForm";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
+import { setNotification } from "./reducers/notificationReducer";
 
 export default function App() {
+  const dispatch = useDispatch();
+  const notification = useSelector((state) => state.notifications);
+
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [notification, setNotification] = useState(null);
 
   const newPostRef = useRef();
 
@@ -44,21 +48,9 @@ export default function App() {
       setUser(userFromLogin);
       setUsername("");
       setPassword("");
-      setNotification({
-        message: "user successfuly logged in",
-        status: "ok",
-      });
-      setTimeout(() => {
-        setNotification(null);
-      }, 5000);
+      dispatch(setNotification("user successfuly logged in", "ok", 5));
     } catch (error) {
-      setNotification({
-        message: error.response.data.error,
-        status: "error",
-      });
-      setTimeout(() => {
-        setNotification(null);
-      }, 5000);
+      dispatch(setNotification(error.response.data.error, "error", 5));
     }
   };
 
@@ -111,21 +103,15 @@ export default function App() {
 
       newPostRef.current.toggleVisible();
 
-      setNotification({
-        message: `a new blog ${createdPost.title} by ${createdPost.author.name} added`,
-        status: "ok",
-      });
-      setTimeout(() => {
-        setNotification(null);
-      }, 5000);
+      dispatch(
+        setNotification(
+          `a new blog ${createdPost.title} by ${createdPost.author.name} added`,
+          "ok",
+          5
+        )
+      );
     } catch (_error) {
-      setNotification({
-        message: "create post failed",
-        status: "error",
-      });
-      setTimeout(() => {
-        setNotification(null);
-      });
+      dispatch(setNotification("create post failed", "error", 5));
     }
   };
 
@@ -152,13 +138,7 @@ export default function App() {
 
       setBlogs(blogs.filter((p) => p.id !== blog.id));
 
-      setNotification({
-        message: `post ${blog.title} removed`,
-        status: "ok",
-      });
-      setTimeout(() => {
-        setNotification(null);
-      }, 5000);
+      dispatch(setNotification(`post ${blog.title} removed`, "ok", 5));
     }
   };
 
