@@ -17,10 +17,13 @@ const blogSlice = createSlice({
         post.id === action.payload.id ? action.payload : post
       );
     },
+    removePost: (state, action) => {
+      return state.filter((post) => post.id !== action.payload.id);
+    },
   },
 });
 
-const { setPosts, addPost, updatePost } = blogSlice.actions;
+const { setPosts, addPost, updatePost, removePost } = blogSlice.actions;
 
 export const fetchInitialPosts = () => {
   return async (dispatch) => {
@@ -62,6 +65,22 @@ export const likePost = (blog) => {
       dispatch(updatePost(updatedPost));
     } catch (error) {
       dispatch(setNotification("Like error"), "error", 5);
+    }
+  };
+};
+
+export const deletePost = (blog) => {
+  return async (dispatch) => {
+    // eslint-disable-next-line no-alert
+    const confirmed = window.confirm(
+      `Remove blog ${blog.title} by ${blog.author.name}`
+    );
+
+    if (confirmed) {
+      await blogService.remove(blog.id);
+
+      dispatch(removePost(blog));
+      dispatch(setNotification(`post ${blog.title} removed`, "ok", 5));
     }
   };
 };

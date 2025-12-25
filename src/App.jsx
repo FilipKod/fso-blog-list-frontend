@@ -7,7 +7,7 @@ import Togglable from "./components/Togglable";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import { setNotification } from "./reducers/notificationReducer";
-import { fetchInitialPosts, likePost } from "./reducers/blogReducer";
+import { fetchInitialPosts } from "./reducers/blogReducer";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -96,25 +96,6 @@ export default function App() {
     blogService.setToken(null);
   };
 
-  const handleLikeButton = async (blog) => {
-    dispatch(likePost(blog));
-  };
-
-  const handleRemoveButton = async (blog) => {
-    // eslint-disable-next-line no-alert
-    const confirmed = window.confirm(
-      `Remove blog ${blog.title} by ${blog.author.name}`
-    );
-
-    if (confirmed) {
-      await blogService.remove(blog.id);
-
-      // setBlogs(blogs.filter((p) => p.id !== blog.id));
-
-      dispatch(setNotification(`post ${blog.title} removed`, "ok", 5));
-    }
-  };
-
   return (
     <div>
       {!user && loginForm()}
@@ -142,15 +123,7 @@ export default function App() {
       {blogs &&
         [...blogs]
           .sort((a, b) => b.likes - a.likes)
-          .map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              user={user}
-              onLike={handleLikeButton}
-              onRemove={handleRemoveButton}
-            />
-          ))}
+          .map((blog) => <Blog key={blog.id} blog={blog} user={user} />)}
     </div>
   );
 }

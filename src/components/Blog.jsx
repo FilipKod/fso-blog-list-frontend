@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
+import { deletePost, likePost } from "../reducers/blogReducer";
 
-function Blog({ blog, onLike, onRemove, user }) {
+function Blog({ blog, user }) {
+  const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
 
   return (
@@ -15,7 +18,7 @@ function Blog({ blog, onLike, onRemove, user }) {
           <div>{blog.url}</div>
           <div>
             <span>likes {blog.likes}</span>
-            <button type="button" onClick={() => onLike(blog)}>
+            <button type="button" onClick={() => dispatch(likePost(blog))}>
               like
             </button>
           </div>
@@ -25,7 +28,7 @@ function Blog({ blog, onLike, onRemove, user }) {
               <button
                 className="removeBtn"
                 type="button"
-                onClick={() => onRemove(blog)}
+                onClick={() => dispatch(deletePost(blog))}
               >
                 remove
               </button>
@@ -48,8 +51,6 @@ Blog.propTypes = {
       name: PropTypes.string.isRequired,
     }).isRequired,
   }).isRequired,
-  onLike: PropTypes.func.isRequired,
-  onRemove: PropTypes.func.isRequired,
   user: PropTypes.shape({}),
 };
 
