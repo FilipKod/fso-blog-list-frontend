@@ -1,13 +1,16 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllUsers } from "../reducers/userReducer";
+import { Link } from "react-router";
+import { fetchAllUsers } from "../../reducers/userReducer";
 
 function Users() {
   const dispatch = useDispatch();
   const users = useSelector((state) => state.users);
 
   useEffect(() => {
-    dispatch(fetchAllUsers());
+    if (!users) {
+      dispatch(fetchAllUsers());
+    }
   }, [dispatch]);
 
   return (
@@ -25,7 +28,9 @@ function Users() {
           <tbody>
             {users.map((user) => (
               <tr key={user.id}>
-                <td>{user.name}</td>
+                <td>
+                  <Link to={`/users/${user.id}`}>{user.name}</Link>
+                </td>
                 <td>{user.blogs.length}</td>
               </tr>
             ))}
