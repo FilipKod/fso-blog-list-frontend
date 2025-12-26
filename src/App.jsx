@@ -1,25 +1,22 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Blog from "./components/Blog";
-import PostForm from "./components/PostForm";
 import Notification from "./components/Notification";
-import Togglable from "./components/Togglable";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import { setNotification } from "./reducers/notificationReducer";
 import { fetchInitialPosts } from "./reducers/blogReducer";
 import { authUser } from "./reducers/authReducer";
+import { Route, Routes } from "react-router";
+import Home from "./pages/Home";
+import Users from "./pages/Users";
 
 export default function App() {
   const dispatch = useDispatch();
   const notification = useSelector((state) => state.notification);
-  const blogs = useSelector((state) => state.blogs);
   const user = useSelector((state) => state.auth);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
-  const newPostRef = useRef();
 
   useEffect(() => {
     dispatch(fetchInitialPosts());
@@ -115,16 +112,10 @@ export default function App() {
         </div>
       )}
 
-      {user && (
-        <Togglable buttonLabel="create new blog" ref={newPostRef}>
-          <PostForm user={user} />
-        </Togglable>
-      )}
-
-      {blogs &&
-        [...blogs]
-          .sort((a, b) => b.likes - a.likes)
-          .map((blog) => <Blog key={blog.id} blog={blog} user={user} />)}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/users" element={<Users />} />
+      </Routes>
     </div>
   );
 }
