@@ -21,7 +21,7 @@ function Home() {
       {blogs &&
         [...blogs]
           .sort((a, b) => b.likes - a.likes)
-          .map((blog) => <Blog key={blog.id} blog={blog} user={user} />)}
+          .map((blog) => <Blog key={blog.id} blog={blog} />)}
     </>
   );
 }

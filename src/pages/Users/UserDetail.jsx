@@ -5,7 +5,7 @@ import { fetchAllUsers } from "../../reducers/userReducer";
 
 function UserDetail() {
   const dispatch = useDispatch();
-  const { id: userId } = useParams();
+  const { userId } = useParams();
   const users = useSelector((state) => state.users);
 
   useEffect(() => {

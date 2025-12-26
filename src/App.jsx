@@ -10,6 +10,7 @@ import { Route, Routes } from "react-router";
 import Home from "./pages/Home";
 import UsersList from "./pages/Users/UsersList";
 import UserDetail from "./pages/Users/UserDetail";
+import PostDetail from "./components/PostDetail";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -115,8 +116,9 @@ export default function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/blogs/:postId" element={<PostDetail />} />
         <Route path="/users" element={<UsersList />} />
-        <Route path="/users/:id" element={<UserDetail />} />
+        <Route path="/users/:userId" element={<UserDetail />} />
       </Routes>
     </div>
   );
