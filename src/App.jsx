@@ -60,8 +60,6 @@ export default function App() {
     <>
       <h2>log in to application</h2>
 
-      <Notification notification={notification} />
-
       <form onSubmit={handleLoginSubmit}>
         <div>
           <label htmlFor="username">
@@ -93,13 +91,13 @@ export default function App() {
 
   return (
     <div>
+      <Notification notification={notification} />
+
       <Navigation />
 
       {!user && loginForm()}
 
       <h2>blog app</h2>
-
-      <Notification notification={notification} />
 
       <Routes>
         <Route path="/" element={<Home />} />

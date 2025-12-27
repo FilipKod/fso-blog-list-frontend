@@ -50,6 +50,21 @@ export const createNewPost = (postData) => {
   };
 };
 
+export const createNewComment = (postId, commentData) => {
+  return async (dispatch) => {
+    try {
+      const postWithNewComment = await blogService.createComment(
+        postId,
+        commentData
+      );
+      dispatch(updatePost(postWithNewComment));
+      dispatch(setNotification("a new comment added", "ok", 5));
+    } catch (error) {
+      dispatch(setNotification("create comment failed", "error", 5));
+    }
+  };
+};
+
 export const likePost = (blog) => {
   return async (dispatch) => {
     const optimisticPost = {

@@ -2,6 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import { likePost, deletePost } from "../reducers/blogReducer";
+import Comments from "./Comments";
 
 function PostDetail() {
   const dispatch = useDispatch();
@@ -44,6 +45,7 @@ function PostDetail() {
             </button>
           )}
         </div>
+        <Comments comments={blog.comments} />
       </div>
     </>
   );
