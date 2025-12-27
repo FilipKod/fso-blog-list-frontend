@@ -11,6 +11,7 @@ import Home from "./pages/Home";
 import UsersList from "./pages/Users/UsersList";
 import UserDetail from "./pages/Users/UserDetail";
 import PostDetail from "./components/PostDetail";
+import Navigation from "./components/Navigation";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -90,29 +91,15 @@ export default function App() {
     </>
   );
 
-  const handleLogout = () => {
-    window.localStorage.removeItem("loggedAppUser");
-    dispatch(authUser(null));
-    blogService.setToken(null);
-  };
-
   return (
     <div>
+      <Navigation />
+
       {!user && loginForm()}
 
-      <h2>blogs</h2>
+      <h2>blog app</h2>
 
-      {user && (
-        <div>
-          <Notification notification={notification} />
-          <p>
-            {user.name} logged in
-            <button type="button" onClick={handleLogout}>
-              logout
-            </button>
-          </p>
-        </div>
-      )}
+      <Notification notification={notification} />
 
       <Routes>
         <Route path="/" element={<Home />} />
