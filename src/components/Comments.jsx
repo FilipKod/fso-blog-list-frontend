@@ -1,20 +1,41 @@
 import PropTypes from "prop-types";
 import React from "react";
+import {
+  Avatar,
+  Box,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Typography,
+} from "@mui/material";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CommentForm from "./CommentForm";
 
 function Comments({ comments }) {
   return (
-    <div>
-      <h3>Comments</h3>
+    <Box>
+      <Typography variant="h4" marginY={2}>
+        Comments
+      </Typography>
       <CommentForm />
       {comments && (
-        <ul>
-          {comments.map((comment) => (
-            <li key={comment.id}>{comment.message}</li>
-          ))}
-        </ul>
+        <List>
+          {[...comments]
+            .sort((a, b) => new Date(b.date) - new Date(a.date))
+            .map((comment) => (
+              <ListItem key={comment.id} sx={{ my: 0.5 }}>
+                <ListItemAvatar>
+                  <Avatar sx={{ height: 36, width: 36 }}>
+                    <AccountCircleIcon fontSize="medium" />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText>{comment.message}</ListItemText>
+              </ListItem>
+            ))}
+        </List>
       )}
-    </div>
+    </Box>
   );
 }
 

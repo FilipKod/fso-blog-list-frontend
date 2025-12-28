@@ -1,5 +1,6 @@
 import React, { useState, useImperativeHandle } from "react";
 import PropTypes from "prop-types";
+import { Button } from "@mui/material";
 
 function Togglable({ children, buttonLabel, ref }) {
   const [visible, setVisible] = useState(false);
@@ -13,16 +14,16 @@ function Togglable({ children, buttonLabel, ref }) {
   const visibleView = (
     <div>
       {children}
-      <button type="button" onClick={toggleVisible}>
+      <Button type="button" onClick={toggleVisible} variant="outlined">
         cancel
-      </button>
+      </Button>
     </div>
   );
 
   const hiddenView = (
-    <button type="button" onClick={toggleVisible}>
+    <Button type="button" onClick={toggleVisible} variant="outlined">
       {buttonLabel}
-    </button>
+    </Button>
   );
 
   return <div>{visible ? visibleView : hiddenView}</div>;

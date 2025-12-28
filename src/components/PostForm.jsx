@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import { createNewPost } from "../reducers/blogReducer";
 
 function PostForm({ user }) {
@@ -24,43 +25,53 @@ function PostForm({ user }) {
   };
 
   return (
-    <div>
-      <h2>create new</h2>
+    <Box>
+      <Typography variant="h4" sx={{ mt: 4, mb: 1 }}>
+        create new
+      </Typography>
 
-      <form onSubmit={handleCreateForm}>
-        <div>
-          <label htmlFor="postTitle">
-            title:
-            <input
-              type="text"
-              id="postTitle"
-              value={postTitle}
-              onChange={({ target }) => setPostTitle(target.value)}
-            />
-          </label>
-        </div>
+      <Box component="form" onSubmit={handleCreateForm}>
+        <TextField
+          fullWidth
+          type="text"
+          id="postTitle"
+          value={postTitle}
+          onChange={({ target }) => setPostTitle(target.value)}
+          variant="outlined"
+          label="Title"
+        />
 
-        <div>
-          <label htmlFor="postAuthor">
-            author:
-            <input type="text" id="postAuthor" value={user.name} disabled />
-          </label>
-        </div>
+        <TextField
+          fullWidth
+          type="text"
+          id="postAuthor"
+          value={user.name}
+          disabled
+          label="Author"
+          variant="outlined"
+          sx={{ my: 1 }}
+        />
 
-        <div>
-          <label htmlFor="postUrl">
-            url:
-            <input
-              type="text"
-              id="postUrl"
-              value={postUrl}
-              onChange={({ target }) => setPostUrl(target.value)}
-            />
-          </label>
-        </div>
-        <button type="submit">create</button>
-      </form>
-    </div>
+        <TextField
+          fullWidth
+          type="text"
+          id="postUrl"
+          value={postUrl}
+          onChange={({ target }) => setPostUrl(target.value)}
+          label="Url"
+          variant="outlined"
+        />
+
+        <Button
+          variant="contained"
+          color="success"
+          sx={{ my: 1 }}
+          type="submit"
+        >
+          create
+        </Button>
+      </Box>
+    </Box>
   );
 }
 export default PostForm;

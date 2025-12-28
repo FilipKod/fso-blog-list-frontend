@@ -1,14 +1,34 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router";
+import { Link as RouterLink } from "react-router";
+import {
+  Avatar,
+  ListItem,
+  ListItemAvatar,
+  Typography,
+  Link as MUILink,
+} from "@mui/material";
+import FolderIcon from "@mui/icons-material/Folder";
 
 function Blog({ blog }) {
   return (
-    <div className="post">
-      <span>
-        <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-      </span>
-    </div>
+    <ListItem sx={{ my: 1.5 }}>
+      <ListItemAvatar>
+        <Avatar sx={{ height: 32, width: 32 }}>
+          <FolderIcon fontSize="small" />
+        </Avatar>
+      </ListItemAvatar>
+      <MUILink
+        component={RouterLink}
+        to={`/blogs/${blog.id}`}
+        underline="always"
+        color="textPrimary"
+      >
+        <Typography variant="h3" fontSize={24}>
+          {blog.title}
+        </Typography>
+      </MUILink>
+    </ListItem>
   );
 }
 

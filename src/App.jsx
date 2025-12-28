@@ -12,6 +12,14 @@ import UsersList from "./pages/Users/UsersList";
 import UserDetail from "./pages/Users/UserDetail";
 import PostDetail from "./components/PostDetail";
 import Navigation from "./components/Navigation";
+import {
+  Box,
+  Button,
+  Container,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -57,54 +65,57 @@ export default function App() {
   };
 
   const loginForm = () => (
-    <>
-      <h2>log in to application</h2>
+    <Box component="section">
+      <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>
+        log in to application
+      </Typography>
 
-      <form onSubmit={handleLoginSubmit}>
-        <div>
-          <label htmlFor="username">
-            username
-            <input
-              id="username"
-              type="text"
-              value={username}
-              onChange={({ target }) => setUsername(target.value)}
-            />
-          </label>
-        </div>
+      <Box component="form" onSubmit={handleLoginSubmit}>
+        <Stack direction="row">
+          <TextField
+            sx={{ mr: 1 }}
+            id="username"
+            label="username"
+            variant="outlined"
+            type="text"
+            value={username}
+            onChange={({ target }) => setUsername(target.value)}
+          />
 
-        <div>
-          <label htmlFor="password">
-            password
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={({ target }) => setPassword(target.value)}
-            />
-          </label>
-        </div>
-        <button type="submit">login</button>
-      </form>
-    </>
+          <TextField
+            sx={{ mr: 1 }}
+            id="password"
+            label="password"
+            variant="outlined"
+            type="password"
+            value={password}
+            onChange={({ target }) => setPassword(target.value)}
+          />
+
+          <Button variant="contained" type="submit">
+            login
+          </Button>
+        </Stack>
+      </Box>
+    </Box>
   );
 
   return (
-    <div>
-      <Notification notification={notification} />
-
+    <>
       <Navigation />
 
-      {!user && loginForm()}
+      <Container sx={{ pt: 8 }}>
+        <Notification notification={notification} />
 
-      <h2>blog app</h2>
+        {!user && loginForm()}
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/blogs/:postId" element={<PostDetail />} />
-        <Route path="/users" element={<UsersList />} />
-        <Route path="/users/:userId" element={<UserDetail />} />
-      </Routes>
-    </div>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/blogs/:postId" element={<PostDetail />} />
+          <Route path="/users" element={<UsersList />} />
+          <Route path="/users/:userId" element={<UserDetail />} />
+        </Routes>
+      </Container>
+    </>
   );
 }

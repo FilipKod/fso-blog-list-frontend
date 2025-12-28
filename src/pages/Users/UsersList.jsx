@@ -2,6 +2,14 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
 import { fetchAllUsers } from "../../reducers/userReducer";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material";
 
 function Users() {
   const dispatch = useDispatch();
@@ -15,27 +23,29 @@ function Users() {
 
   return (
     <>
-      <h2>Users</h2>
+      <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>
+        Users
+      </Typography>
 
       {users && (
-        <table>
-          <thead>
-            <tr>
-              <th scope="col" aria-label="names" />
-              <th scope="col">blogs created</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell scope="col" aria-label="names" />
+              <TableCell scope="col">blogs created</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {users.map((user) => (
-              <tr key={user.id}>
-                <td>
+              <TableRow key={user.id}>
+                <TableCell>
                   <Link to={`/users/${user.id}`}>{user.name}</Link>
-                </td>
-                <td>{user.blogs.length}</td>
-              </tr>
+                </TableCell>
+                <TableCell>{user.blogs.length}</TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       )}
     </>
   );
