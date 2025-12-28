@@ -86,16 +86,22 @@ export const likePost = (blog) => {
 
 export const deletePost = (blog) => {
   return async (dispatch) => {
-    // eslint-disable-next-line no-alert
-    const confirmed = window.confirm(
-      `Remove blog ${blog.title} by ${blog.author.name}`
-    );
+    try {
+      // eslint-disable-next-line no-alert
+      const confirmed = window.confirm(
+        `Remove blog ${blog.title} by ${blog.author.name}`
+      );
 
-    if (confirmed) {
-      await blogService.remove(blog.id);
+      if (confirmed) {
+        await blogService.remove(blog.id);
 
-      dispatch(removePost(blog));
-      dispatch(setNotification(`post ${blog.title} removed`, "ok", 5));
+        dispatch(removePost(blog));
+        dispatch(setNotification(`post ${blog.title} removed`, "ok", 5));
+      }
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.error || error.message || "Something went wrong";
+      dispatch(setNotification(errorMessage, "error", 15));
     }
   };
 };
