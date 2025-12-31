@@ -1,6 +1,7 @@
 import js from "@eslint/js";
 import globals from "globals";
 import pluginReact from "eslint-plugin-react";
+import pluginQuery from "@tanstack/eslint-plugin-query";
 import { fileURLToPath } from "url";
 import path from "path";
 import { FlatCompat } from "@eslint/eslintrc";
@@ -18,6 +19,7 @@ export default [
   {
     ignores: ["eslint.config.js", "*.config.js"],
   },
+  ...pluginQuery.configs["flat/recommended"],
   js.configs.recommended,
   {
     files: ["**/*.{js,mjs,cjs,jsx}"],

@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import { useParams } from "react-router";
 import { Box, Button, Stack, TextField } from "@mui/material";
-import { createNewComment } from "../reducers/blogReducer";
+import useBlogs from "../hooks/useBlogs";
 
 function CommentForm() {
   const { postId } = useParams();
-  const dispatch = useDispatch();
+  const { newCommentMutation } = useBlogs();
   const [value, setValue] = useState("");
 
   const handleSubmitForm = (e) => {
@@ -16,7 +15,10 @@ function CommentForm() {
       message: value,
     };
 
-    dispatch(createNewComment(postId, commentData));
+    newCommentMutation.mutate({
+      postId,
+      commentData,
+    });
     setValue("");
   };
 

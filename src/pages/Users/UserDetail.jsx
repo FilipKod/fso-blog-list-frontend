@@ -1,18 +1,10 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
 import { useParams } from "react-router";
-import { fetchAllUsers } from "../../reducers/userReducer";
+import useUsers from "../../hooks/useUsers";
 
 function UserDetail() {
-  const dispatch = useDispatch();
   const { userId } = useParams();
-  const users = useSelector((state) => state.users);
-
-  useEffect(() => {
-    if (!users) {
-      dispatch(fetchAllUsers());
-    }
-  }, [dispatch]);
+  const { data: users } = useUsers();
 
   if (!users) return null;
 

@@ -1,27 +1,23 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router";
+import React, { useContext } from "react";
+import { useParams } from "react-router";
 import { Box, Button, Typography } from "@mui/material";
-import { likePost, deletePost } from "../reducers/blogReducer";
 import Comments from "./Comments";
+import useBlogs from "../hooks/useBlogs";
+import { AuthContext } from "../contexts/authContext";
 
 function PostDetail() {
-  const dispatch = useDispatch();
   const { postId } = useParams();
-  const navigate = useNavigate();
-  const blogs = useSelector((state) => state.blogs);
-  const user = useSelector((state) => state.auth);
+  const { likePostMutation, deletePostMutation } = useBlogs();
+
+  const { data: blogs } = useBlogs();
+
+  const user = useContext(AuthContext);
 
   if (!blogs) return null;
 
   const blog = blogs.find((b) => b.id === postId);
 
   if (!blog) return null;
-
-  const handleRemoveButton = (blogData) => {
-    dispatch(deletePost(blogData));
-    navigate("/");
-  };
 
   return (
     <Box>
@@ -41,7 +37,7 @@ function PostDetail() {
               size="small"
               type="button"
               sx={{ ml: 1.5 }}
-              onClick={() => dispatch(likePost(blog))}
+              onClick={() => likePostMutation.mutate(blog)}
             >
               like
             </Button>
@@ -58,7 +54,7 @@ function PostDetail() {
             className="removeBtn"
             type="button"
             size="small"
-            onClick={() => handleRemoveButton(blog)}
+            onClick={() => deletePostMutation.mutate(blog)}
           >
             remove post
           </Button>

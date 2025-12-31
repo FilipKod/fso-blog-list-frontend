@@ -1,7 +1,5 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
 import { Link } from "react-router";
-import { fetchAllUsers } from "../../reducers/userReducer";
 import {
   Table,
   TableBody,
@@ -10,16 +8,10 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import useUsers from "../../hooks/useUsers";
 
 function Users() {
-  const dispatch = useDispatch();
-  const users = useSelector((state) => state.users);
-
-  useEffect(() => {
-    if (!users) {
-      dispatch(fetchAllUsers());
-    }
-  }, [dispatch]);
+  const { data: users } = useUsers();
 
   return (
     <>

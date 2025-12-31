@@ -1,5 +1,4 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useContext } from "react";
 import { Link } from "react-router";
 import {
   AppBar,
@@ -9,16 +8,16 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { authUser } from "../reducers/authReducer";
 import blogService from "../services/blogs";
+import { AuthActionsContext, AuthContext } from "../contexts/authContext";
 
 function Navigation() {
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth);
+  const authContext = useContext(AuthActionsContext);
+  const user = useContext(AuthContext);
 
   const handleLogout = () => {
     window.localStorage.removeItem("loggedAppUser");
-    dispatch(authUser(null));
+    authContext.setAuth(null);
     blogService.setToken(null);
   };
 

@@ -1,13 +1,14 @@
-import React, { useRef } from "react";
-import { useSelector } from "react-redux";
+import React, { useRef, useContext } from "react";
 import { Box, List } from "@mui/material";
 import Blog from "../components/Blog";
 import Togglable from "../components/Togglable";
 import PostForm from "../components/PostForm";
+import useBlogs from "../hooks/useBlogs";
+import { AuthContext } from "../contexts/authContext";
 
 function Home() {
-  const blogs = useSelector((state) => state.blogs);
-  const user = useSelector((state) => state.auth);
+  const { data: blogs } = useBlogs();
+  const user = useContext(AuthContext);
 
   const newPostRef = useRef();
 

@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { useDispatch } from "react-redux";
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { createNewPost } from "../reducers/blogReducer";
+import useBlogs from "../hooks/useBlogs";
 
 function PostForm({ user }) {
-  const dispatch = useDispatch();
+  const { createPostMutation } = useBlogs();
 
   const [postTitle, setPostTitle] = useState("");
   const [postUrl, setPostUrl] = useState("");
@@ -13,12 +12,12 @@ function PostForm({ user }) {
   const handleCreateForm = async (event) => {
     event.preventDefault();
 
-    const postData = {
+    const newPostData = {
       title: postTitle,
       url: postUrl,
     };
 
-    dispatch(createNewPost(postData));
+    createPostMutation.mutate(newPostData);
 
     setPostTitle("");
     setPostUrl("");
